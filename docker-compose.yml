@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  ubuntu-python:
+    build: ./docker/ubuntu-python
+    container_name: ubuntu_python
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    depends_on:
+      - postgres
+    tty: true
+
+  postgres:
+    build: ./docker/postgres
+    container_name: postgres
+    environment:
+      POSTGRES_DB: news
+      POSTGRES_USER: ssafyuser
+      POSTGRES_PASSWORD: ssafy
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    build: ./docker/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+
+  flink:
+    build: ./docker/flink
+    container_name: flink
+    ports:
+      - "8081:8081"
+    tty: true
+
+volumes:
+  pgdata:
