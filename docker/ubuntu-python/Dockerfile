@@ -22,10 +22,10 @@ RUN apt-get update && \
 WORKDIR /root
 
 # 3. requirements.txt, .env, test_codes 복사
-COPY requirements.txt ./
-COPY ../../env ./
-COPY test_codes/ ./test_codes/
-COPY ingest_codes/ ./ingest_codes/
+COPY docker/ubuntu-python/requirements.txt ./
+COPY .env ./
+COPY docker/ubuntu-python/test_codes/ ./test_codes/
+COPY docker/ubuntu-python/ingest_codes/ ./ingest_codes/
 
 # 4. JAVA_HOME 설정 + 가상환경 생성 및 의존성 설치
 RUN echo 'export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))' >> /etc/profile && \

@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   ubuntu-python:
-    build: ./docker/ubuntu-python
+    build: 
+      context: ./
+      dockerfile: ./docker/ubuntu-python/Dockerfile
     container_name: ubuntu_python
     volumes:
       - .:/workspace
