@@ -23,7 +23,7 @@ WORKDIR /root
 
 # 3. requirements.txt, .env, test_codes 복사
 COPY requirements.txt ./
-COPY .env ./
+COPY ../../env ./
 COPY test_codes/ ./test_codes/
 COPY ingest_codes/ ./ingest_codes/
 
